@@ -1,0 +1,27 @@
+{
+  "name": "bithound",
+  "contributors": [
+    {
+      "name": "Chris Silivestru",
+      "email": "chris@bithound.io",
+      "url": "http://github.com/bithound/cli.bithound.io"
+    }
+  ],
+  "license": "UNLICENSED",
+  "version": "0.0.1",
+  "main": "lib/bithound.js",
+  "dependencies": {
+    "commander": "^2.8.1"
+  },
+  "devDependencies": {
+    "tap": "^2.3.1"
+  },
+  "preferGlobal": "false",
+  "private": "true",
+  "scripts": {
+    "lint": "semistandard",
+    "pretest": "npm run lint",
+    "test": "tap tests/unit/*.js"
+  }
+}
+
