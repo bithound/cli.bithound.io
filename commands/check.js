@@ -3,17 +3,34 @@ var
   program = require('commander'),
   request = require('request');
 
-module.exports = function (provider, owner, repo, sha) {
+function parse(url) {
+  if (!url) { return null; }
+
+  var match = url.match(/github.com[:\/](.*)\/(.*)/) ||
+    url.match(/bitbucket.org[:\/](.*)\/(.*)/);
+
+  if (!match) { return null; }
+
+  return {
+    url: url,
+    owner: match[1],
+    name: match[2].replace(/\.git$/, ''),
+    provider: match[0].substring(0, match[0].indexOf('.'))
+  };
+}
+
+module.exports = function (url, sha) {
   if (!process.env.BITHOUND_API) {
     process.stderr.write('BITHOUND_API environment variable missing');
     return process.exit(1);
   }
 
-  var token = program.repoToken || process.env.BITHOUND_REPO_TOKEN;
-  var args = [provider, owner, repo, sha];
+  var path = '/api/check/';
+  var repo = parse(url);
   var stillRunning;
 
-  if (token) args.push(token);
+  if (!repo) path += [url, sha].join('/');
+  else path += [repo.provider, repo.owner, repo.name, sha].join('/');
 
   var requestOpts = {
     headers: {
@@ -21,7 +38,7 @@ module.exports = function (provider, owner, repo, sha) {
       'User-Agent': 'cli.bithound.io'
     },
     type: 'GET',
-    url: process.env.BITHOUND_API + '/api/check/' + args.join('/')
+    url: process.env.BITHOUND_API + path
   };
   async.doWhilst(function (done) {
     request(requestOpts, function (err, res, body) {
