@@ -4,6 +4,11 @@ var
   request = require('request');
 
 module.exports = function (provider, owner, repo, sha) {
+  if (!process.env.BITHOUND_API) {
+    process.stderr.write('BITHOUND_API environment variable missing');
+    return process.exit(1);
+  }
+
   var token = program.repoToken || process.env.BITHOUND_REPO_TOKEN;
   var args = [provider, owner, repo, sha];
   var stillRunning;
