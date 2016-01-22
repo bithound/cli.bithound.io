@@ -9,13 +9,6 @@ var server = http.createServer(app);
 var env = { BITHOUND_API: 'http://localhost:3333' };
 var port = 3333;
 
-tap.test('BITHOUND_API must be defined', function (t) {
-  exec('node bithound check provider owner repo sha', function (err, stdout, stderr) {
-     tap.equal(stderr, 'BITHOUND_API environment variable missing');
-     t.end();
-   });
-});
-
 tap.test('A repo must exists', function (t) {
   server.listen(port, function () {
     app.get('/api/check/provider/owner/repo/sha', function (req, res) { return res.sendStatus(404); });

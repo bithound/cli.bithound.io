@@ -20,12 +20,7 @@ function parse(url) {
 }
 
 module.exports = function (url, sha) {
-  if (!process.env.BITHOUND_API) {
-    process.stderr.write('BITHOUND_API environment variable missing');
-    return process.exit(1);
-  }
-
-  var path = '/api/check/';
+  var path = 'https://bithound.io/api/check/';
   var repo = parse(url);
   var stillRunning;
 
