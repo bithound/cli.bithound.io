@@ -6,7 +6,7 @@ var async = require('async');
 
 var app = express();
 var server = http.createServer(app);
-var env = { BITHOUND_API: 'http://localhost:3333' };
+var env = { BITHOUND_HOST: 'http://localhost:3333' };
 var port = 3333;
 
 tap.test('A repo must exists', function (t) {
@@ -14,6 +14,19 @@ tap.test('A repo must exists', function (t) {
     app.get('/api/check/provider/owner/repo/sha', function (req, res) { return res.sendStatus(404); });
 
     exec('node bithound check git@github.com/provider/owner/repo.git sha', { env: env }, function (err, stdout, stderr) {
+      tap.equal(stderr, 'Branch could not be determined.');
+      tap.equal(err.code, 1);
+      server.close();
+      t.end();
+    });
+  });
+});
+
+tap.test('A repo must exists', function (t) {
+  server.listen(port, function () {
+    app.get('/api/check/provider/owner/repo/branch/sha', function (req, res) { return res.sendStatus(404); });
+
+    exec('node bithound check git@github.com/provider/owner/repo.git sha --branch branch', { env: env }, function (err, stdout, stderr) {
       tap.equal(stderr, 'Repo not found.');
       tap.equal(err.code, 1);
       server.close();
@@ -25,9 +38,9 @@ tap.test('A repo must exists', function (t) {
 tap.test('A request can be made with a unique token', function (t) {
   server.listen(port, function (err) {
     var body = { complete: true, failing: false };
-    app.get('/api/check/unique_token/sha', function (req, res) { return res.status(200).send(body); });
+    app.get('/api/check/unique_token/branch/sha', function (req, res) { return res.status(200).send(body); });
 
-    exec('node bithound check unique_token sha', { env: env }, function (err, stdout, stderr) {
+    exec('node bithound check unique_token sha --branch branch', { env: env }, function (err, stdout, stderr) {
       tap.equal(err, null);
       server.close();
       t.end();
@@ -38,9 +51,9 @@ tap.test('A request can be made with a unique token', function (t) {
 tap.test('A request can be made with a github git url', function (t) {
   server.listen(port, function (err) {
     var body = { complete: true, failing: false };
-    app.get('/api/check/github/james/bond/sha', function (req, res) { return res.status(200).send(body); });
+    app.get('/api/check/github/james/bond/branch/sha', function (req, res) { return res.status(200).send(body); });
 
-    exec('node bithound check git@github.com/james/bond.git sha', { env: env }, function (err, stdout, stderr) {
+    exec('node bithound check git@github.com/james/bond.git sha --branch branch', { env: env }, function (err, stdout, stderr) {
       tap.equal(err, null);
       server.close();
       t.end();
@@ -51,9 +64,9 @@ tap.test('A request can be made with a github git url', function (t) {
 tap.test('A request can be made with a bitbucket git url', function (t) {
   server.listen(port, function (err) {
     var body = { complete: true, failing: false };
-    app.get('/api/check/bitbucket/james/bond/sha', function (req, res) { return res.status(200).send(body); });
+    app.get('/api/check/bitbucket/james/bond/branch/sha', function (req, res) { return res.status(200).send(body); });
 
-    exec('node bithound check git@bitbucket.org/james/bond.git sha', { env: env }, function (err, stdout, stderr) {
+    exec('node bithound check git@bitbucket.org/james/bond.git sha --branch branch', { env: env }, function (err, stdout, stderr) {
       tap.equal(err, null);
       server.close();
       t.end();
@@ -63,15 +76,15 @@ tap.test('A request can be made with a bitbucket git url', function (t) {
 
 tap.test('Non-200 responses from bitHound should result in 1 exit code and correct stderr', function (t) {
   server.listen(port, function (err) {
-    app.get('/api/check/github/error/400/sha', function (req, res) { return res.sendStatus(400); });
-    app.get('/api/check/github/error/401/sha', function (req, res) { return res.sendStatus(401); });
-    app.get('/api/check/github/error/403/sha', function (req, res) { return res.sendStatus(403); });
-    app.get('/api/check/github/error/404/sha', function (req, res) { return res.sendStatus(404); });
-    app.get('/api/check/github/error/500/sha', function (req, res) { return res.sendStatus(500); });
+    app.get('/api/check/github/error/400/branch/sha', function (req, res) { return res.sendStatus(400); });
+    app.get('/api/check/github/error/401/branch/sha', function (req, res) { return res.sendStatus(401); });
+    app.get('/api/check/github/error/403/branch/sha', function (req, res) { return res.sendStatus(403); });
+    app.get('/api/check/github/error/404/branch/sha', function (req, res) { return res.sendStatus(404); });
+    app.get('/api/check/github/error/500/branch/sha', function (req, res) { return res.sendStatus(500); });
 
     async.parallel({
       400: function (done) {
-        exec('node bithound check git@github.com/error/400.git sha', { env: env }, function (err, stdout, stderr) {
+        exec('node bithound check git@github.com/error/400.git sha --branch branch', { env: env }, function (err, stdout, stderr) {
           tap.ok(err);
           tap.equal(stderr, 'Invalid request.');
           tap.equal(err.code, 1);
@@ -79,7 +92,7 @@ tap.test('Non-200 responses from bitHound should result in 1 exit code and corre
         });
       },
       401: function (done) {
-        exec('node bithound check git@github.com/error/401.git sha', { env: env }, function (err, stdout, stderr) {
+        exec('node bithound check git@github.com/error/401.git sha --branch branch', { env: env }, function (err, stdout, stderr) {
           tap.ok(err);
           tap.equal(stderr, 'Authorization failed. Invalid repo token.');
           tap.equal(err.code, 1);
@@ -87,7 +100,7 @@ tap.test('Non-200 responses from bitHound should result in 1 exit code and corre
         });
       },
       403: function (done) {
-        exec('node bithound check git@github.com/error/403.git sha', { env: env }, function (err, stdout, stderr) {
+        exec('node bithound check git@github.com/error/403.git sha --branch branch', { env: env }, function (err, stdout, stderr) {
           tap.ok(err);
           tap.equal(stderr, 'Not permitted.');
           tap.equal(err.code, 1);
@@ -95,7 +108,7 @@ tap.test('Non-200 responses from bitHound should result in 1 exit code and corre
         });
       },
       404: function (done) {
-        exec('node bithound check git@github.com/error/404.git sha', { env: env }, function (err, stdout, stderr) {
+        exec('node bithound check git@github.com/error/404.git sha --branch branch', { env: env }, function (err, stdout, stderr) {
           tap.ok(err);
           tap.equal(stderr, 'Repo not found.');
           tap.equal(err.code, 1);
@@ -103,7 +116,7 @@ tap.test('Non-200 responses from bitHound should result in 1 exit code and corre
         });
       },
       500: function (done) {
-        exec('node bithound check git@github.com/error/500.git sha', { env: env }, function (err, stdout, stderr) {
+        exec('node bithound check git@github.com/error/500.git sha --branch branch', { env: env }, function (err, stdout, stderr) {
           tap.ok(err);
           tap.equal(stderr, 'Internal server error.');
           tap.equal(err.code, 1);
@@ -120,9 +133,9 @@ tap.test('Non-200 responses from bitHound should result in 1 exit code and corre
 tap.test('200 responses from bitHound should result in 0 exit code', function (t) {
   var body = { complete: true, failing: false };
   server.listen(port, function (err) {
-    app.get('/api/check/github/success/200/sha', function (req, res) { return res.status(200).send(body); });
+    app.get('/api/check/github/success/200/branch/sha', function (req, res) { return res.status(200).send(body); });
 
-    exec('node bithound check git@github.com/success/200.git sha', { env: env }, function (err, stdout, stderr) {
+    exec('node bithound check git@github.com/success/200.git sha --branch branch', { env: env }, function (err, stdout, stderr) {
       tap.notOk(err);
 
       server.close();

@@ -19,13 +19,39 @@ function parse(url) {
   };
 }
 
+function getBranch() {
+  var branch = program.branch;
+
+  if (branch) return branch;
+
+  if (process.env.TRAVIS) {
+    branch = process.env.TRAVIS_BRANCH;
+  } else if (process.env.JENKINS_URL) {
+    branch = process.env.GIT_BRANCH;
+  } else if (process.env.CIRCLECI) {
+    branch = process.env.CIRCLE_BRANCH;
+  } else if (process.env.CI_NAME && process.env.CI_NAME === 'codeship') {
+    branch = process.env.CI_BRANCH;
+  } else if (process.env.WERCKER) {
+    branch = process.env.WERCKER_GIT_BRANCH;
+  }
+
+  return branch;
+}
+
 module.exports = function (url, sha) {
-  var path = 'https://bithound.io/api/check/';
+  var path = (process.env.BITHOUND_HOST || 'https://localhost:8443') + '/api/check/';
   var repo = parse(url);
+  var branch = getBranch();
   var stillRunning;
 
-  if (!repo) path += [url, sha].join('/');
-  else path += [repo.provider, repo.owner, repo.name, sha].join('/');
+  if (!branch) {
+    process.stderr.write('Branch could not be determined.');
+    return process.exit(1);
+  }
+
+  if (!repo) path += [url, branch, sha].join('/'); //They provided a repo token as first arg
+  else path += [repo.provider, repo.owner, repo.name, branch, sha].join('/');
 
   var requestOpts = {
     headers: {
@@ -33,7 +59,7 @@ module.exports = function (url, sha) {
       'User-Agent': 'cli.bithound.io'
     },
     type: 'GET',
-    url: process.env.BITHOUND_API + path
+    url: path
   };
   async.doWhilst(function (done) {
     request(requestOpts, function (err, res, body) {
@@ -65,6 +91,8 @@ module.exports = function (url, sha) {
       process.stderr.write(err.message);
       return process.exit(1);
     }
+
+    if (body.failing) process.stderr.write(body.message);
 
     process.exit(body.failing);
   });
