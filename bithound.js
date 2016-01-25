@@ -5,7 +5,7 @@ program
   .option('--repo-token [token]', 'Unique token for private repository (provided by bitHound)');
 
 program
-  .command('check [provider] [owner] [repo] [sha]')
+  .command('check [url] [sha]')
   .description('Check if a sha passes bitHound analysis')
   .action(require('./commands/check'));
 
