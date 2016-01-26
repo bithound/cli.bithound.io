@@ -36,7 +36,7 @@ tap.test('A repo must exists', function (t) {
 });
 
 tap.test('A request can be made with a unique token', function (t) {
-  server.listen(port, function (err) {
+  server.listen(port, function (ignored) {
     var body = { complete: true, failing: false };
     app.get('/api/check/unique_token/branch/sha', function (req, res) { return res.status(200).send(body); });
 
@@ -49,7 +49,7 @@ tap.test('A request can be made with a unique token', function (t) {
 });
 
 tap.test('A request can be made with a github git url', function (t) {
-  server.listen(port, function (err) {
+  server.listen(port, function (ignored) {
     var body = { complete: true, failing: false };
     app.get('/api/check/github/james/bond/branch/sha', function (req, res) { return res.status(200).send(body); });
 
@@ -62,7 +62,7 @@ tap.test('A request can be made with a github git url', function (t) {
 });
 
 tap.test('A request can be made with a bitbucket git url', function (t) {
-  server.listen(port, function (err) {
+  server.listen(port, function (ignored) {
     var body = { complete: true, failing: false };
     app.get('/api/check/bitbucket/james/bond/branch/sha', function (req, res) { return res.status(200).send(body); });
 
@@ -75,7 +75,7 @@ tap.test('A request can be made with a bitbucket git url', function (t) {
 });
 
 tap.test('Non-200 responses from bitHound should result in 1 exit code and correct stderr', function (t) {
-  server.listen(port, function (err) {
+  server.listen(port, function (ignored) {
     app.get('/api/check/github/error/400/branch/sha', function (req, res) { return res.sendStatus(400); });
     app.get('/api/check/github/error/401/branch/sha', function (req, res) { return res.sendStatus(401); });
     app.get('/api/check/github/error/403/branch/sha', function (req, res) { return res.sendStatus(403); });
@@ -132,7 +132,7 @@ tap.test('Non-200 responses from bitHound should result in 1 exit code and corre
 
 tap.test('200 responses from bitHound should result in 0 exit code', function (t) {
   var body = { complete: true, failing: false };
-  server.listen(port, function (err) {
+  server.listen(port, function (ignored) {
     app.get('/api/check/github/success/200/branch/sha', function (req, res) { return res.status(200).send(body); });
 
     exec('node bithound check git@github.com/success/200.git --sha sha --branch branch', { env: env }, function (err, stdout, stderr) {
@@ -146,7 +146,7 @@ tap.test('200 responses from bitHound should result in 0 exit code', function (t
 
 tap.test('Uses environment variables to discover sha and branch', function (t) {
   var body = { complete: true, failing: false };
-  server.listen(port, function (err) {
+  server.listen(port, function (ignored) {
     app.get('/api/check/github/success/200/thisisabranch/thisisasha', function (req, res) { return res.status(200).send(body); });
     async.parallel({
       travis: function (done) {
