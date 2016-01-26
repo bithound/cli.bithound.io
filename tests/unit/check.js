@@ -35,15 +35,19 @@ tap.test('A repo must exists', function (t) {
   });
 });
 
+function equalAndClose(err, t, server) {
+  tap.equal(err, null);
+  server.close();
+  t.end();
+}
+
 tap.test('A request can be made with a unique token', function (t) {
   server.listen(port, function (ignored) {
     var body = { complete: true, failing: false };
     app.get('/api/check/unique_token/branch/sha', function (req, res) { return res.status(200).send(body); });
 
-    exec('node bithound check unique_token --sha sha --branch branch', { env: env }, function (err, stdout, stderr) {
-      tap.equal(err, null);
-      server.close();
-      t.end();
+    exec('node bithound check unique_token --sha sha --branch branch', { env: env }, function (err) {
+      equalAndClose(err, t, server);
     });
   });
 });
@@ -53,10 +57,8 @@ tap.test('A request can be made with a github git url', function (t) {
     var body = { complete: true, failing: false };
     app.get('/api/check/github/james/bond/branch/sha', function (req, res) { return res.status(200).send(body); });
 
-    exec('node bithound check git@github.com/james/bond.git --sha sha --branch branch', { env: env }, function (err, stdout, stderr) {
-      tap.equal(err, null);
-      server.close();
-      t.end();
+    exec('node bithound check git@github.com/james/bond.git --sha sha --branch branch', { env: env }, function (err) {
+      equalAndClose(err, t, server);
     });
   });
 });
@@ -66,10 +68,8 @@ tap.test('A request can be made with a bitbucket git url', function (t) {
     var body = { complete: true, failing: false };
     app.get('/api/check/bitbucket/james/bond/branch/sha', function (req, res) { return res.status(200).send(body); });
 
-    exec('node bithound check git@bitbucket.org/james/bond.git --sha sha --branch branch', { env: env }, function (err, stdout, stderr) {
-      tap.equal(err, null);
-      server.close();
-      t.end();
+    exec('node bithound check git@bitbucket.org/james/bond.git --sha sha --branch branch', { env: env }, function (err) {
+      equalAndClose(err, t, server);
     });
   });
 });
