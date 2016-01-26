@@ -19,39 +19,50 @@ function parse(url) {
   };
 }
 
-function getBranch() {
-  var branch = program.branch;
-
-  if (branch) return branch;
+function commitInfo() {
+  var branch, sha;
 
   if (process.env.TRAVIS) {
     branch = process.env.TRAVIS_BRANCH;
+    sha = process.env.TRAVIS_COMMIT;
   } else if (process.env.JENKINS_URL) {
     branch = process.env.GIT_BRANCH;
+    sha = process.env.GIT_COMMIT;
   } else if (process.env.CIRCLECI) {
     branch = process.env.CIRCLE_BRANCH;
+    sha = process.env.CIRCLE_SHA1;
   } else if (process.env.CI_NAME && process.env.CI_NAME === 'codeship') {
     branch = process.env.CI_BRANCH;
+    sha = process.env.CI_COMMIT_ID;
   } else if (process.env.WERCKER) {
     branch = process.env.WERCKER_GIT_BRANCH;
+    sha = process.env.WERCKER_GIT_COMMIT;
   }
 
-  return branch;
+  return {
+    branch: program.branch || branch,
+    sha: program.sha || sha
+  };
 }
 
-module.exports = function (url, sha) {
-  var path = (process.env.BITHOUND_HOST || 'https://localhost:8443') + '/api/check/';
+module.exports = function (url) {
+  var path = (process.env.BITHOUND_HOST || 'https://bithound.io') + '/api/check/';
   var repo = parse(url);
-  var branch = getBranch();
+  var commit = commitInfo();
   var stillRunning;
 
-  if (!branch) {
+  if (!commit.branch) {
     process.stderr.write('Branch could not be determined.');
     return process.exit(1);
   }
 
-  if (!repo) path += [url, branch, sha].join('/'); //They provided a repo token as first arg
-  else path += [repo.provider, repo.owner, repo.name, branch, sha].join('/');
+  if (!commit.sha) {
+    process.stderr.write('Commit sha could not be determined.');
+    return process.exit(1);
+  }
+
+  if (!repo) path += [url, commit.branch, commit.sha].join('/'); //They provided a repo token as first arg
+  else path += [repo.provider, repo.owner, repo.name, commit.branch, commit.sha].join('/');
 
   var requestOpts = {
     headers: {
