@@ -23,7 +23,7 @@
   "devDependencies": {
     "express": "^4.13.3",
     "semistandard": "^7.0.5",
-    "tap": "^2.3.1"
+    "tap": "^5.2.0"
   },
   "preferGlobal": "false",
   "scripts": {
