@@ -35,7 +35,7 @@ tap.test('A repo must exists', function (t) {
   });
 });
 
-function equalAndClose(err, t, server) {
+function equalAndClose (err, t, server) {
   tap.equal(err, null);
   server.close();
   t.end();
@@ -123,10 +123,7 @@ tap.test('Non-200 responses from bitHound should result in 1 exit code and corre
           done();
         });
       }
-    }, function () {
-      server.close();
-      t.end();
-    });
+    }, function () { server.close(); t.end(); });
   });
 });
 
@@ -148,55 +145,43 @@ tap.test('Uses environment variables to discover sha and branch', function (t) {
   var body = { complete: true, failing: false };
   server.listen(port, function (ignored) {
     app.get('/api/check/github/success/200/thisisabranch/thisisasha', function (req, res) { return res.status(200).send(body); });
+
+    function noError (done, err) {
+      tap.notOk(err);
+      done();
+    }
+
     async.parallel({
       travis: function (done) {
         env.TRAVIS = true;
         env.TRAVIS_COMMIT = 'thisisasha';
         env.TRAVIS_BRANCH = 'thisisabranch';
-        exec('node bithound check git@github.com/success/200.git', { env: env }, function (err, stdout, stderr) {
-          tap.notOk(err);
-          done();
-        });
+        exec('node bithound check git@github.com/success/200.git', { env: env }, async.apply(noError, done));
       },
       jenkins: function (done) {
         env.JENKINS_URL = 'some url';
         env.GIT_COMMIT = 'thisisasha';
         env.GIT_BRANCH = 'thisisabranch';
-        exec('node bithound check git@github.com/success/200.git', { env: env }, function (err, stdout, stderr) {
-          tap.notOk(err);
-          done();
-        });
+        exec('node bithound check git@github.com/success/200.git', { env: env }, async.apply(noError, done));
       },
       circle: function (done) {
         env.CIRCLECI = true;
         env.CIRCLE_SHA1 = 'thisisasha';
         env.CIRCLE_BRANCH = 'thisisabranch';
-        exec('node bithound check git@github.com/success/200.git', { env: env }, function (err, stdout, stderr) {
-          tap.notOk(err);
-          done();
-        });
+        exec('node bithound check git@github.com/success/200.git', { env: env }, async.apply(noError, done));
       },
       codeship: function (done) {
         env.CI_NAME = 'codeship';
         env.CI_COMMIT_ID = 'thisisasha';
         env.CI_BRANCH = 'thisisabranch';
-        exec('node bithound check git@github.com/success/200.git', { env: env }, function (err, stdout, stderr) {
-          tap.notOk(err);
-          done();
-        });
+        exec('node bithound check git@github.com/success/200.git', { env: env }, async.apply(noError, done));
       },
       wercker: function (done) {
         env.WERCKER = true;
         env.WERKER_GIT_COMMIT = 'thisisasha';
         env.WERKER_GIT_BRANCH = 'thisisabranch';
-        exec('node bithound check git@github.com/success/200.git', { env: env }, function (err, stdout, stderr) {
-          tap.notOk(err);
-          done();
-        });
+        exec('node bithound check git@github.com/success/200.git', { env: env }, async.apply(noError, done));
       }
-    }, function () {
-      server.close();
-      t.end();
-    });
+    }, function () { server.close(); t.end(); });
   });
 });
