@@ -16,12 +16,12 @@
     "bithound": "bin/bithound"
   },
   "dependencies": {
+    "async": "^1.5.2",
     "commander": "^2.8.1",
-    "express": "^4.13.3",
     "request": "^2.67.0"
   },
   "devDependencies": {
-    "async": "^1.5.2",
+    "express": "^4.13.3",
     "semistandard": "^7.0.5",
     "tap": "^2.3.1"
   },
