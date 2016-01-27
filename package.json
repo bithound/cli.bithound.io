@@ -1,14 +1,17 @@
 {
   "name": "bithound",
-  "contributors": [
-    {
-      "name": "Chris Silivestru",
-      "email": "chris@bithound.io",
-      "url": "http://github.com/bithound/cli.bithound.io"
-    }
-  ],
-  "license": "UNLICENSED",
   "version": "0.0.1",
+  "description": "Commands for interacting with bitHound: https://bithound.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bithound/cli.bithound.io"
+  },
+  "bugs": {
+    "url": "https://github.com/bithound/cli.bithound.io/issues"
+  },
+  "author": "Chris Silivestru <chris@bithound.io>",
+  "license": "MIT",
+  "homepage": "https://github.com/bithound/cli.bithound.io",
   "bin": {
     "bithound": "bin/bithound"
   },
@@ -23,7 +26,6 @@
     "tap": "^2.3.1"
   },
   "preferGlobal": "false",
-  "private": "true",
   "scripts": {
     "lint": "semistandard",
     "pretest": "npm run lint",
