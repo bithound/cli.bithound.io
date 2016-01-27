@@ -35,7 +35,7 @@ tap.test('A repo must exists', function (t) {
   });
 });
 
-function equalAndClose(err, t, server) {
+function equalAndClose (err, t, server) {
   tap.equal(err, null);
   server.close();
   t.end();

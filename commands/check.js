@@ -1,9 +1,8 @@
-var
-  async = require('async'),
-  program = require('commander'),
-  request = require('request');
+var async = require('async');
+var program = require('commander');
+var request = require('request');
 
-function parse(url) {
+function parse (url) {
   if (!url) { return null; }
 
   var match = url.match(/github.com[:\/](.*)\/(.*)/) ||
@@ -19,7 +18,7 @@ function parse(url) {
   };
 }
 
-function commitInfo() {
+function commitInfo () {
   var branch, sha;
 
   if (process.env.TRAVIS) {
@@ -61,7 +60,7 @@ module.exports = function (url) {
     return process.exit(1);
   }
 
-  if (!repo) path += [url, commit.branch, commit.sha].join('/'); //They provided a repo token as first arg
+  if (!repo) path += [url, commit.branch, commit.sha].join('/'); // They provided a repo token as first arg
   else path += [repo.provider, repo.owner, repo.name, commit.branch, commit.sha].join('/');
 
   var requestOpts = {
@@ -84,7 +83,7 @@ module.exports = function (url) {
         if (res.statusCode === 403) return done(new Error('Not permitted.'));
         if (res.statusCode === 404) return done(new Error('Repo not found.'));
         if (res.statusCode === 400) return done(new Error('Invalid request.'));
-        
+
         return done(new Error('Internal server error.'));
       }
 
@@ -93,7 +92,7 @@ module.exports = function (url) {
       stillRunning = !body.complete;
 
       if (body.complete) proceed();
-      else setTimeout(proceed, 3000); //Poll for sha status every 3 seconds
+      else setTimeout(proceed, 3000); // Poll for sha status every 3 seconds
     });
   }, function () {
     return stillRunning;
