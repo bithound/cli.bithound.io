@@ -1,6 +1,6 @@
 {
   "name": "bithound",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Commands for interacting with bitHound: https://bithound.io",
   "repository": {
     "type": "git",
