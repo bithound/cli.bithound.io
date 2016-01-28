@@ -25,7 +25,7 @@
     "semistandard": "^7.0.5",
     "tap": "^5.2.0"
   },
-  "preferGlobal": "false",
+  "preferGlobal": false,
   "scripts": {
     "lint": "semistandard",
     "pretest": "npm run lint",
