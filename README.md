@@ -34,12 +34,27 @@ Otherwise, run it with:
 # Commands
 
 ## check
+Attempts to retrieve the latest status of failing criteria for a repo.
+
+This command can be used to check the status of both public and private repos.
+
+For public repos, use the raw git url of the repo. It will look similar to:
+
+```
+git@github.com:bithound/cli.bithound.io.git
+```
+
+For private repos, use your repo token provided by bitHound. It will look similar to:
+
+```
+8164a970-c6bb-11e5-9058-dd9db6223fa8
+```
+
+Run the check command as follows:
 
 ```
 bithound check <git url | repo token>
 ```
-
-Attempts to retrieve the latest failing criteria status for the repo corresponding to the git url or unique repo token provided.
 
 You may optionally pass the specific branch and sha through the `--branch` and `--sha` options, respectively. However, this is 
 designed to work inside a CI and, as such, the `check` command will attempt to pick up the branch and sha from the CI environment variables
@@ -47,7 +62,7 @@ when a push event is detected by the CI.
 
 If analysis is in progress, this command will poll until analysis is complete and report the results.
 
-Your repo token can be found on your repo settings page under _Integrations_ or by running `bithound token`.
+Your repo token can be found on your repo settings page under _Integrations_ or by running `bithound token`. In addition, you may also configure your repo's failing criteria on that settings page.
 
 ## token
 
