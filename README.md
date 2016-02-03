@@ -50,6 +50,8 @@ For private repos, use your repo token provided by bitHound. It will look simila
 8164a970-c6bb-11e5-9058-dd9db6223fa8
 ```
 
+See the `token` command for how to get this value.
+
 Run the check command as follows:
 
 ```
