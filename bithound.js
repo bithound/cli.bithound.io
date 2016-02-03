@@ -11,4 +11,9 @@ program
   .description('Check if a sha passes bitHound analysis')
   .action(require('./commands/check'));
 
+program
+  .command('token')
+  .description('Opens your browser to the repo settings page to see your token')
+  .action(require('./commands/token'));
+
 program.parse(process.argv);
