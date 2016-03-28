@@ -5,7 +5,7 @@ program
   .option('--repo-token [token]', 'Unique token for private repository (provided by bitHound)')
   .option('--branch [branch]', 'An optional branch argument. If not provided, the command will attempt to discover it through an env variable')
   .option('--sha [sha]', 'An optional commit sha argument. If not provided, the command will attempt to discover it through an env variable')
-  .option('--timeout [seconds]', 'An optional timeout time in seconds. If none is specified, 10 minutes will be used.');
+  .option('--timeout [minutes]', 'An optional timeout in minutes. If none is specified, 10 minutes will be used.');
 
 program
   .command('check [url]')
