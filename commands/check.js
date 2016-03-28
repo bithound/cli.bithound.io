@@ -52,6 +52,10 @@ module.exports = function (url) {
   var repo = parse(url);
   var commit = commitInfo();
   var stillRunning;
+  var timeout = setTimeout(function () {
+    process.stderr.write('Timed out after 10 minutes.');
+    return process.exit(1);
+  }, 10 * 60 * 1000);
 
   if (!commit.branch) {
     process.stderr.write('Branch could not be determined.');
