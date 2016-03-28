@@ -36,9 +36,9 @@ function commitInfo () {
   } else if (process.env.WERCKER) {
     branch = process.env.WERCKER_GIT_BRANCH;
     sha = process.env.WERCKER_GIT_COMMIT;
-  } else if (process.env.BAMBOO_REPOSITORY_GIT_BRANCH) {
-    branch = process.env.BAMBOO_REPOSITORY_GIT_BRANCH;
-    sha = process.env.BAMBOO_REPOSITORY_REVISION_NUMBER;
+  } else if (process.env.bamboo_repository_git_branch) {
+    branch = process.env.bamboo_repository_git_branch;
+    sha = process.env.bamboo_repository_revision_number;
   }
 
   return {
