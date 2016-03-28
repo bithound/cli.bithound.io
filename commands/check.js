@@ -88,7 +88,7 @@ module.exports = function (url) {
       if (res.statusCode !== 200) {
         if (res.statusCode === 401) return done(new Error('Authorization failed. Invalid repo token.'));
         if (res.statusCode === 403) return done(new Error('Not permitted.'));
-        if (res.statusCode === 404) return done(new Error('Repo not found.'));
+        if (res.statusCode === 404) return done(new Error('Repo or commit not found.'));
         if (res.statusCode === 400) return done(new Error('Invalid request.'));
 
         return done(new Error('Internal server error.'));
