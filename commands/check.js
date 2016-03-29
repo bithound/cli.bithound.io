@@ -52,6 +52,12 @@ module.exports = function (url) {
   var repo = parse(url);
   var commit = commitInfo();
   var stillRunning;
+  var timeout = (parseInt(program.timeout, 10) || 10);
+
+  setTimeout(function () {
+    process.stderr.write('Timed out after ' + timeout + ' minute' + (timeout > 1 ? 's.' : '.'));
+    return process.exit(1);
+  }, timeout * 60 * 1000);
 
   if (!commit.branch) {
     process.stderr.write('Branch could not be determined.');
@@ -84,7 +90,7 @@ module.exports = function (url) {
       if (res.statusCode !== 200) {
         if (res.statusCode === 401) return done(new Error('Authorization failed. Invalid repo token.'));
         if (res.statusCode === 403) return done(new Error('Not permitted.'));
-        if (res.statusCode === 404) return done(new Error('Repo not found.'));
+        if (res.statusCode === 404) return done(new Error('Repo or commit not found.'));
         if (res.statusCode === 400) return done(new Error('Invalid request.'));
 
         return done(new Error('Internal server error.'));
