@@ -181,7 +181,7 @@ tap.test('Uses environment variables to discover sha and branch', function (t) {
         env.APPVEYOR = true;
         env.APPVEYOR_REPO_COMMIT = 'thisisasha';
         env.APPVEYOR_REPO_BRANCH = 'thisisabranch';
-      }
+      },
       wercker: function (done) {
         env.WERCKER = true;
         env.WERKER_GIT_COMMIT = 'thisisasha';
