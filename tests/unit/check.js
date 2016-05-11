@@ -177,10 +177,14 @@ tap.test('Uses environment variables to discover sha and branch', function (t) {
         exec('node bithound check git@github.com/success/200.git', { env: env }, async.apply(noError, done));
       },
       appveyor: function (done) {
-        'use strict';
         env.APPVEYOR = true;
         env.APPVEYOR_REPO_COMMIT = 'thisisasha';
         env.APPVEYOR_REPO_BRANCH = 'thisisabranch';
+        exec('node bithound check git@github.com/success/200.git', { env: env }, async.apply(noError, done));
+      },
+      bitbucket: function (done) {
+        env.BITBUCKET_COMMIT = 'thisisasha';
+        env.BITBUCKET_BRANCH = 'thisisabranch';
         exec('node bithound check git@github.com/success/200.git', { env: env }, async.apply(noError, done));
       },
       wercker: function (done) {

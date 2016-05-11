@@ -42,6 +42,9 @@ function commitInfo () {
   } else if (process.env.bamboo_repository_git_branch) {
     branch = process.env.bamboo_repository_git_branch;
     sha = process.env.bamboo_repository_revision_number;
+  } else if (process.env.BITBUCKET_BRANCH) {
+    branch = process.env.BITBUCKET_BRANCH;
+    sha = process.env.BITBUCKET_COMMIT;
   }
 
   return {
