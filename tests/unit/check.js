@@ -27,7 +27,7 @@ tap.test('A repo must exists', function (t) {
     app.get('/api/check/provider/owner/repo/branch/sha', function (req, res) { return res.sendStatus(404); });
 
     exec('node bithound check git@github.com/provider/owner/repo.git --sha sha --branch branch', { env: env }, function (err, stdout, stderr) {
-      tap.equal(stderr, 'Repo not found.');
+      tap.equal(stderr, 'Repo or commit not found.');
       tap.equal(err.code, 1);
       server.close();
       t.end();
@@ -110,7 +110,7 @@ tap.test('Non-200 responses from bitHound should result in 1 exit code and corre
       404: function (done) {
         exec('node bithound check git@github.com/error/404.git --sha sha --branch branch', { env: env }, function (err, stdout, stderr) {
           tap.ok(err);
-          tap.equal(stderr, 'Repo not found.');
+          tap.equal(stderr, 'Repo or commit not found.');
           tap.equal(err.code, 1);
           done();
         });
@@ -181,6 +181,7 @@ tap.test('Uses environment variables to discover sha and branch', function (t) {
         env.APPVEYOR = true;
         env.APPVEYOR_REPO_COMMIT = 'thisisasha';
         env.APPVEYOR_REPO_BRANCH = 'thisisabranch';
+        exec('node bithound check git@github.com/success/200.git', { env: env }, async.apply(noError, done));
       },
       wercker: function (done) {
         env.WERCKER = true;
@@ -188,6 +189,6 @@ tap.test('Uses environment variables to discover sha and branch', function (t) {
         env.WERKER_GIT_BRANCH = 'thisisabranch';
         exec('node bithound check git@github.com/success/200.git', { env: env }, async.apply(noError, done));
       }
-    }, function () { server.close(); t.end(); });
+    }, function () { t.end(); server.close(); });
   });
 });
