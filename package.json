@@ -24,8 +24,8 @@
   },
   "devDependencies": {
     "express": "^4.13.3",
-    "semistandard": "^7.0.5",
-    "tap": "^5.2.0"
+    "semistandard": "^8.0.0",
+    "tap": "^6.1.1"
   },
   "preferGlobal": false,
   "scripts": {
