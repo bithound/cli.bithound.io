@@ -16,7 +16,7 @@
     "bithound": "bin/bithound"
   },
   "dependencies": {
-    "async": "^1.5.2",
+    "async": "^2.0.0",
     "commander": "^2.8.1",
     "git-origin-url": "^0.3.0",
     "open": "0.0.5",
