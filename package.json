@@ -19,6 +19,7 @@
     "async": "^2.0.0",
     "commander": "^2.8.1",
     "git-origin-url": "^0.3.0",
+    "git-rev-sync": "^1.6.0",
     "open": "0.0.5",
     "request": "^2.67.0"
   },

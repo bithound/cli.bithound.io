@@ -1,6 +1,7 @@
 var async = require('async');
 var program = require('commander');
 var request = require('request');
+var git = require('git-rev-sync');
 
 function parse (url) {
   if (!url) { return null; }
@@ -22,7 +23,7 @@ function commitInfo () {
   var branch, sha;
 
   if (process.env.TRAVIS) {
-    branch = (false === process.env.TRAVIS_PULL_REQUEST ? process.env.TRAVIS_BRANCH : branch);
+    branch = (process.env.TRAVIS_PULL_REQUEST === false ? process.env.TRAVIS_BRANCH : git.branch());
     sha = process.env.TRAVIS_COMMIT;
   } else if (process.env.JENKINS_URL) {
     branch = process.env.GIT_BRANCH;
