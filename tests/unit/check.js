@@ -14,7 +14,7 @@ tap.test('A repo must exists', function (t) {
     app.get('/api/check/provider/owner/repo/sha', function (req, res) { return res.sendStatus(404); });
 
     exec('node bithound check git@github.com/provider/owner/repo.git --sha sha', { env: env }, function (err, stdout, stderr) {
-      tap.equal(stderr, 'Branch could not be determined.');
+      tap.equal(stderr, 'Repo or commit not found.');
       tap.equal(err.code, 1);
       server.close();
       t.end();

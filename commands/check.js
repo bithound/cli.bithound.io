@@ -48,7 +48,7 @@ function commitInfo () {
   }
 
   return {
-    branch: program.branch || branch,
+    branch: encodeURIComponent(program.branch || branch),
     sha: program.sha || sha
   };
 }

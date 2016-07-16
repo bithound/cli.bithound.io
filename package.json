@@ -1,6 +1,6 @@
 {
   "name": "bithound",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Commands for interacting with bitHound: https://bithound.io",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
     "bithound": "bin/bithound"
   },
   "dependencies": {
-    "async": "^1.5.2",
+    "async": "^2.0.0",
     "commander": "^2.8.1",
     "git-origin-url": "^0.3.0",
     "open": "0.0.5",
@@ -24,8 +24,8 @@
   },
   "devDependencies": {
     "express": "^4.13.3",
-    "semistandard": "^7.0.5",
-    "tap": "^5.2.0"
+    "semistandard": "^8.0.0",
+    "tap": "^6.1.1"
   },
   "preferGlobal": false,
   "scripts": {
