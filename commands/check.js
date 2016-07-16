@@ -23,7 +23,7 @@ function commitInfo () {
   var branch, sha;
 
   if (process.env.TRAVIS) {
-    branch = (process.env.TRAVIS_PULL_REQUEST === false ? process.env.TRAVIS_BRANCH : git.branch(process.env.TRAVIS_BUILD_DIR));
+    branch = (process.env.TRAVIS_PULL_REQUEST === 'false' ? process.env.TRAVIS_BRANCH : git.branch(process.env.TRAVIS_BUILD_DIR));
     sha = process.env.TRAVIS_COMMIT;
   } else if (process.env.JENKINS_URL) {
     branch = process.env.GIT_BRANCH;
