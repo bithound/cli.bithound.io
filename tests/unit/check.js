@@ -9,15 +9,19 @@ var server = http.createServer(app);
 var env = { BITHOUND_HOST: 'http://localhost:3333' };
 var port = 3333;
 
+function notFoundCommitOrRepo (err, t, server, stderr) {
+  tap.equal(stderr, 'Repo or commit not found.');
+  tap.equal(err.code, 1);
+  server.close();
+  t.end();
+}
+
 tap.test('A repo must exists', function (t) {
   server.listen(port, function () {
     app.get('/api/check/provider/owner/repo/sha', function (req, res) { return res.sendStatus(404); });
 
     exec('node bithound check git@github.com/provider/owner/repo.git --sha sha', { env: env }, function (err, stdout, stderr) {
-      tap.equal(stderr, 'Repo or commit not found.');
-      tap.equal(err.code, 1);
-      server.close();
-      t.end();
+      notFoundCommitOrRepo(err, t, server, stderr);
     });
   });
 });
@@ -27,10 +31,7 @@ tap.test('A repo must exists', function (t) {
     app.get('/api/check/provider/owner/repo/branch/sha', function (req, res) { return res.sendStatus(404); });
 
     exec('node bithound check git@github.com/provider/owner/repo.git --sha sha --branch branch', { env: env }, function (err, stdout, stderr) {
-      tap.equal(stderr, 'Repo or commit not found.');
-      tap.equal(err.code, 1);
-      server.close();
-      t.end();
+      notFoundCommitOrRepo(err, t, server, stderr);
     });
   });
 });
