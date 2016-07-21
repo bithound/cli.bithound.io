@@ -23,8 +23,13 @@ function commitInfo () {
   var branch, sha;
 
   if (process.env.TRAVIS) {
-    branch = (process.env.TRAVIS_PULL_REQUEST === 'false' ? process.env.TRAVIS_BRANCH : git.branch(process.env.TRAVIS_BUILD_DIR));
-    sha = process.env.TRAVIS_COMMIT;
+    if (process.env.TRAVIS_PULL_REQUEST === 'false') {
+      branch = process.env.TRAVIS_BRANCH;
+      sha = process.env.TRAVIS_COMMIT;
+    } else {
+      branch = (process.env.TRAVIS_PULL_REQUEST === 'false' ? process.env.TRAVIS_BRANCH : git.branch(process.env.TRAVIS_BUILD_DIR));
+      sha = process.env.TRAVIS_COMMIT_RANGE.match(/\.\.\.(\b[0-9a-f]{5,40}\b)$/i)[1];
+    }
   } else if (process.env.JENKINS_URL) {
     branch = process.env.GIT_BRANCH;
     sha = process.env.GIT_COMMIT;
