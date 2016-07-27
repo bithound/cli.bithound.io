@@ -51,6 +51,9 @@ function commitInfo () {
   } else if (process.env.BITBUCKET_BRANCH) {
     branch = process.env.BITBUCKET_BRANCH;
     sha = process.env.BITBUCKET_COMMIT;
+  } else {
+    branch = git.branch(process.cwd());
+    sha = git.long(process.cwd());
   }
 
   return {
